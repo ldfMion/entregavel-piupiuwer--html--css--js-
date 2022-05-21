@@ -1,6 +1,7 @@
 console.log('teste');
 const feed = document.getElementById('feed');
 const searchFieldTextInput = document.getElementById("search-field-text");
+const searchArea = document.getElementById('search-area');
 
 
 fetch("https://arcane-sierra-77337.herokuapp.com/data")
@@ -24,52 +25,49 @@ fetch("https://arcane-sierra-77337.herokuapp.com/data")
 			}
 		);
 		console.log(uniqueUsers);
-		searchFieldTextInput.addEventListener("input", e => {
-            const searchedText = e.target.value.toLowerCase();
-            const searchResults = document.getElementById('search-results');
-            const searchResultsChildren = Array.from(searchResults.children);
-            if(searchResultsChildren.length){
-                console.log(searchResultsChildren);
-                searchResultsChildren.forEach(result => result.remove());
-            }
-            if(searchedText.length === 0){
-                searchResults.classList.add('search-results-inactive');
-                return
-            }
-            searchResults.classList.remove('search-results-inactive');
-			console.log(searchedText);
-			const filteredUsers = uniqueUsers.filter(
-				user =>
-					user.username.toLowerCase().includes(searchedText) ||
-					(
-						user.first_name.toLowerCase() +
-						" " +
-						user.last_name.toLowerCase()
-					).includes(searchedText)
-			);
-            if(filteredUsers.length === 0){
-                searchResults.classList.add('search-results-inactive');
-            } else {0
-                console.log(filteredUsers);
-                filteredUsers.forEach(user => {
-                    searchResults.appendChild(new UsernameButton(user.username).element)
-                })
-            }
-		});
+		searchFieldTextInput.addEventListener("input", e => search(e, uniqueUsers));
     })
+
+const piarButton = document.getElementById('piar-button');
+
+piarButton.addEventListener('click', () => {
+    piarButton.classList.add('piar-button-hidden');
+    document.querySelector('body').appendChild(new CriarPio().element);
+})
 
 
 class UsernameButton {
     constructor(username){
         this.username = username;
+        console.log('is on username button constructor')
     }
     get element(){
+        console.log('is on get elemetn on username button')
         const usernameParagraph = document.createElement("p");
         usernameParagraph.appendChild(document.createTextNode("@" + this.username))
         const usernameButton = document.createElement("button");
         usernameButton.appendChild(usernameParagraph);
         usernameButton.classList.add('btn-terciary');
         return usernameButton;
+    }
+}
+
+class UserContainer {
+    constructor(photoSrc, usernameButton){
+        this.photoSrc = photoSrc;
+        this.usernameButton = usernameButton;
+    }
+    get element(){
+        const profileImg = document.createElement("img");
+		profileImg.src = this.photoSrc;
+        profileImg.classList.add('profile-img')
+        profileImg.alt = 'profile photo';
+
+        const userContainer = document.createElement("div");
+        userContainer.classList.add('user-container');
+        userContainer.appendChild(profileImg);
+        userContainer.appendChild(this.usernameButton);
+        return userContainer;
     }
 }
 
@@ -89,16 +87,8 @@ class Piu {
         //USER AND TEXT
 
         const usernameButton = new UsernameButton(this.username).element;
-        
-		const profileImg = document.createElement("img");
-		profileImg.src = this.photo;
-        profileImg.classList.add('profile-img')
-        //profileImg.alt = 'profile photo';
 
-        const userContainer = document.createElement("div");
-        userContainer.classList.add('user-container');
-        userContainer.appendChild(profileImg);
-        userContainer.appendChild(usernameButton);
+        const userContainer = new UserContainer(this.photo, usernameButton).element;
 
         const piuHeader = document.createElement('header');
         piuHeader.classList.add('piu-header');
@@ -193,6 +183,122 @@ class RepiarAction extends Action {
     cssClass = 'repiar-action';
 }
 
-const search = (e, uniqueUsers) => {
+const currentUser = {
+    username: 'lorenzodfmion',
+    first_name: 'Lorenzo',
+    last_name: 'Mion',
+    photo: 'user-image.jpg'
+}
 
+class CriarPio {
+    constructor(automaticallyAddedText){
+        this.automaticallyAddedText = automaticallyAddedText;
+    }
+    get element(){
+        const criarPio = document.createElement('form');
+        criarPio.classList.add('criar-pio')
+
+        criarPio.appendChild(new UserContainer(currentUser.photo, new UsernameButton(currentUser.username).element).element);
+
+        const inputText = document.createElement('textarea');
+        criarPio.appendChild(inputText);
+
+        const errorArea = document.createElement('div');
+        errorArea.classList.add('error-area');
+        const errorMessage = document.createElement('p');
+        errorMessage.classList.add('warning-text');
+        errorArea.appendChild(errorMessage);
+        const charCount = document.createElement('p');
+        charCount.innerText = '140'
+        charCount.classList.add('text-align-right');
+        errorArea.appendChild(charCount);
+        criarPio.appendChild(errorArea);
+
+
+        const buttons = document.createElement('div');
+        buttons.classList.add("criar-pio-buttons")
+
+        const cancelButton = document.createElement('button');
+        cancelButton.classList.add('btn-terciary');
+        const cancelButtonText = document.createElement('p');
+        cancelButtonText.innerText = 'cancel';
+        cancelButton.appendChild(cancelButtonText)
+        buttons.appendChild(cancelButton);
+
+        const submitPio = document.createElement('button');
+        submitPio.disabled = true;
+        submitPio.classList.add('btn-primary');
+        const submitPioText = document.createElement('p');
+        submitPioText.innerText = 'piar';
+        submitPio.appendChild(submitPioText)
+        buttons.appendChild(submitPio);
+
+        criarPio.appendChild(buttons);
+
+        inputText.addEventListener('keyup', e => {
+            const remainingChars = 140 - e.target.value.length;
+            charCount.innerText = remainingChars;
+            if(remainingChars < 0){
+                submitPio.disabled = true;
+                charCount.classList.add('warning-text');
+                errorMessage.innerText = 'Escreva no máximo 140 caracteres';
+            } else if (remainingChars === 140){
+                submitPio.disabled = true;
+                charCount.classList.add('warning-text');
+                errorMessage.innerText = 'O piu não pode estar vazio';
+            } 
+            else {
+                submitPio.disabled = false;
+                charCount.classList.remove('warning-text');
+                errorMessage.innerText = '';
+            }
+        });
+
+        cancelButton.addEventListener('click', e => {
+            criarPio.remove();
+            console.log('os going to remove this class');
+            piarButton.classList.remove('piar-button-hidden');
+        })
+
+        submitPio.addEventListener('click', e => {
+            const piuText = inputText.value;
+            e.preventDefault();
+            searchArea.after(new Piu({text: piuText, user: currentUser}).element);
+        })
+
+        return criarPio;
+    }
+}
+
+const search = (e, uniqueUsers) => {
+    const searchedText = e.target.value.toLowerCase();
+    const searchResults = document.getElementById('search-results');
+    const searchResultsChildren = Array.from(searchResults.children);
+    if(searchResultsChildren.length){
+        console.log(searchResultsChildren);
+        searchResultsChildren.forEach(result => result.remove());
+    }
+    if(searchedText.length === 0){
+        searchResults.classList.add('search-results-inactive');
+        return
+    }
+    searchResults.classList.remove('search-results-inactive');
+    console.log(searchedText);
+    const filteredUsers = uniqueUsers.filter(
+        user =>
+            user.username.toLowerCase().includes(searchedText) ||
+            (
+                user.first_name.toLowerCase() +
+                " " +
+                user.last_name.toLowerCase()
+            ).includes(searchedText)
+    );
+    if(filteredUsers.length === 0){
+        searchResults.classList.add('search-results-inactive');
+    } else {0
+        console.log(filteredUsers);
+        filteredUsers.forEach(user => {
+            searchResults.appendChild(new UsernameButton(user.username).element)
+        })
+    }
 }

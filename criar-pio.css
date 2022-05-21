@@ -1,0 +1,39 @@
+.criar-pio {
+    position: absolute;
+    border-radius: var(--border-radius);
+    display: flex;
+    flex-direction: column;
+    background: white;
+    box-shadow: var(--shadow-card-piu);
+    justify-content: center;
+    align-items: stretch;
+    right: 4rem;
+    bottom: 4rem;
+    padding: 1.5rem;
+    gap: 1rem;
+    width: 20rem;
+    height: 25rem;
+    max-width: 100%;
+}
+
+.criar-pio-buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.criar-pio-buttons > * {
+    width: 100%;
+}
+
+.criar-pio-buttons > * > * {
+    text-align: center;
+    width: 100%;
+}
+
+.error-area {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-between;
+}
