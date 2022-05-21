@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Piupiwer - Feed</title>
+
+    <link rel="stylesheet" href="app.css">
+    <link rel="stylesheet" href="navbar.css">
+    <link rel="stylesheet" href="feed.css">
+    <link rel="stylesheet" href="piu.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com"> 
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> 
+    <link href="https://fonts.googleapis.com/css?family=Raleway:700,800" rel="stylesheet">
+
+</head>
+<body>
+    <aside class="navbar">
+        <header class="navbar-header">
+            <img src="logo.svg" alt="logo" class="logo">
+            <h1>Piupiuwer</h1>
+        </header>
+        <nav>
+            <button onclick="window.location.href='feed.html'" class="btn-terciary">
+                <img src="icons/home.svg" alt="feed icon">
+                <p>Feed</p>
+            </button>
+            <button onClick="window.location.href='profile.html'" class="btn-terciary">
+                <img src="icons/profile.svg" alt="profile icon">
+                <p>Perfil</p>
+            </button>
+        </nav>
+    </aside>
+    <section class="feed" id="feed">
+        <form class="search-field">
+            <input type="text" placeholder="Busca...">
+            <input type="submit" value="Procurar">
+        </form>
+    </section>
+    <script src="feed.js"></script>
+</body>
+</html>

@@ -1,0 +1,33 @@
+.navbar {
+    background-color: var(--yellow-main);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 40px 48px;
+    gap: 64px;
+    width: fit-content;
+    height: 100vh;
+}
+
+nav {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 0px;
+    gap: 24px;
+    width: 100%;
+    align-items: stretch;
+}
+
+.logo {
+    width: 76px;
+    height: 51px;
+}
+
+.navbar-header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 0px;
+    gap: 16px;
+}

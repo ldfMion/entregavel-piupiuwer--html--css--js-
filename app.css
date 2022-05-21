@@ -1,0 +1,92 @@
+* { margin: 0; padding: 0; box-sizing: border-box}
+
+:root {
+    --font-main: "Raleway";
+    --black-main: #272727;
+    --black-light: #27272740;
+    --yellow-main: #FFE45F;
+    --blue-main: #85C7F2;
+    --blue-light: #85C7F280;
+    --shadow-button-black: 0px 10px 50px 5px var(--black-light);
+    --shadow-button-blue: 0px 10px 50px 5px var(--blue-light);
+    --border-radius: 16px;
+}
+
+*{
+    font-family: var(--font-main);
+    transition: 100ms all;
+}
+
+button {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 16px;
+    gap: 12px;
+
+    /* shadow/button/black */
+    border-radius: var(--border-radius);
+}
+
+button:hover{
+    background: #85C7F2;
+    box-shadow: var(--shadow-button-blue);
+}
+
+button:active{
+    opacity: 0.5;
+}
+
+.btn-terciary {
+    background: none;
+    border: none;
+    width: 100%;
+}
+
+p {
+    font-family: var(--font-main);
+    font-size: 12px;
+    word-break: break-all;
+    white-space: normal;
+}
+
+body{
+    display: flex;
+    flex-direction: row;
+    width: 100vw;
+    overflow-y: hidden;
+}
+
+input {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 16px;
+    background: rgba(133, 199, 242, 0.5);
+    border-radius: var(--border-radius);
+    border: none;
+}
+input:focus{
+    box-shadow: var(--shadow-button-black);
+    outline: none;
+}
+input[type=text]{
+    width: 100%;
+}
+input[type=submit]{
+    background: var(--yellow-main);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 16px;
+    gap: 12px;
+
+    /* shadow/button/black */
+    border-radius: var(--border-radius);
+}
+
+input[type=submit]:hover{
+    background: #85C7F2;
+    box-shadow: var(--shadow-button-blue);
+}

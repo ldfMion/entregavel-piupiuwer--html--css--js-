@@ -1,0 +1,100 @@
+:root{
+    --shadow-card-piu: 0px 5px 50px 25px rgba(39, 39, 39, 0.1);
+
+    --yellow-light: #FFE45F80;
+    --pink-light: #E34A6F80;
+
+    --shadow-action-yellow: 0px 10px 50px 5px var(--yellow-light);
+    --shadow-action-blue: var(--shadow-button-blue);
+    --shadow-action-pink: 0px 10px 50px 5px var(--pink-light);
+}
+
+.user-container {
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+}
+
+.profile-img {
+    height: 50px;
+    width: 50px;
+    border-radius: 100%;
+    object-fit: cover;
+}
+
+.piu {
+    background: white;
+    box-shadow: var(--shadow-card-piu);
+    border-radius: 32px;
+    max-width: 576px;
+    min-width: 100%;
+    overflow: clip;
+}
+
+.piu-header {
+
+}
+
+.text-paragraph {
+    width: 100%;
+}
+
+.user-and-text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 32px;
+    gap: 32px;
+    align-items: stretch;
+}
+
+.actions{
+    display: flex;
+    flex-direction: row;
+}
+
+.actions > * {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    border-radius: var(--border-radius);
+    background: none;
+    border: none;
+    overflow: hidden;
+}
+
+.like-action{
+    border-bottom-left-radius: 0;
+}
+
+.like-action:hover{
+    background: var(--pink-light);
+    box-shadow: var(--shadow-action-pink);
+}
+
+.liked{
+    background: var(--pink-light);
+    box-shadow: var(--shadow-action-pink);
+}
+
+
+.comment-action{
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.comment-action:hover{
+    box-shadow: var(--shadow-action-blue);
+    background: var(--blue-light);
+}
+
+
+.repiar-action{
+    border-bottom-right-radius: 0;
+}
+
+.repiar-action:hover{
+    background: var(--yellow-light);
+    box-shadow: var(--shadow-action-yellow);
+}

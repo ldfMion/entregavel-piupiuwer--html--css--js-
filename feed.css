@@ -1,0 +1,17 @@
+.search-field {
+    display: flex;
+    flex-direction: row;
+    gap: 12px;
+    width: 100%;
+}
+
+.feed{
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    padding: 64px 32px 64px 32px;
+    gap: 32px;
+    align-items: center;
+    overflow-y: scroll;
+    height: 100vh;
+}
