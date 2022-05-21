@@ -1,5 +1,73 @@
 console.log('teste');
 const feed = document.getElementById('feed');
+const searchFieldTextInput = document.getElementById("search-field-text");
+
+
+fetch("https://arcane-sierra-77337.herokuapp.com/data")
+    .then((response) => response.json()).then(pius => {
+
+        //PEGAR OS PIUS
+        console.log(pius);
+        pius.forEach(piu => {
+            feed.appendChild(new Piu(piu).element);
+        })
+        
+        //FUNCTIONALIDADE SEARCH
+        const users = pius.map(piu => piu.user);
+		const uniqueUsers = Array.from(new Set(users.map(user => user.id))).map(
+			id => {
+				return users.find(user => user.id === id);
+			}
+		);
+		console.log(uniqueUsers);
+		searchFieldTextInput.addEventListener("input", e => {
+            const searchedText = e.target.value.toLowerCase();
+            const searchResults = document.getElementById('search-results');
+            const searchResultsChildren = Array.from(searchResults.children);
+            if(searchResultsChildren.length){
+                console.log(searchResultsChildren);
+                searchResultsChildren.forEach(result => result.remove());
+            }
+            if(searchedText.length === 0){
+                searchResults.classList.add('search-results-inactive');
+                return
+            }
+            searchResults.classList.remove('search-results-inactive');
+			console.log(searchedText);
+			const filteredUsers = uniqueUsers.filter(
+				user =>
+					user.username.toLowerCase().includes(searchedText) ||
+					(
+						user.first_name.toLowerCase() +
+						" " +
+						user.last_name.toLowerCase()
+					).includes(searchedText)
+			);
+            if(filteredUsers.length === 0){
+                searchResults.classList.add('search-results-inactive');
+            } else {0
+                console.log(filteredUsers);
+                filteredUsers.forEach(user => {
+                    searchResults.appendChild(new UsernameButton(user.username).element)
+                })
+            }
+		});
+    })
+
+
+class UsernameButton {
+    constructor(username){
+        this.username = username;
+    }
+    get element(){
+        const usernameParagraph = document.createElement("p");
+        usernameParagraph.appendChild(document.createTextNode("@" + this.username))
+        const usernameButton = document.createElement("button");
+        usernameButton.appendChild(usernameParagraph);
+        usernameButton.classList.add('btn-terciary');
+        return usernameButton;
+    }
+}
 
 class Piu {
 	constructor({ 
@@ -7,7 +75,7 @@ class Piu {
         user,
     }) {
 		this.text = text;
-		this.username = '@'+ user.username;
+		this.username = user.username;
         this.photo = user.photo;
 	}
 	get element() {
@@ -16,11 +84,7 @@ class Piu {
 
         //USER AND TEXT
 
-        const usernameParagraph = document.createElement("p");
-        usernameParagraph.appendChild(document.createTextNode(this.username))
-        const usernameButton = document.createElement("button");
-        usernameButton.appendChild(usernameParagraph);
-        usernameButton.classList.add('btn-terciary');
+        const usernameButton = new UsernameButton(this.username).element;
         
 		const profileImg = document.createElement("img");
 		profileImg.src = this.photo;
@@ -53,9 +117,9 @@ class Piu {
         const actions = document.createElement('div');
         actions.classList.add('actions')
 
-        actions.appendChild(new RepiarAction(10).createElement);
-        actions.appendChild(new CommentAction(10).createElement);
-        actions.appendChild(new LikeAction(10).createElement);
+        actions.appendChild(new RepiarAction(Math.floor(Math.random() * 100)).createElement);
+        actions.appendChild(new CommentAction(Math.floor(Math.random() * 100)).createElement);
+        actions.appendChild(new LikeAction(Math.floor(Math.random() * 100)).createElement);
 
         piu.appendChild(actions)
 
@@ -125,12 +189,6 @@ class RepiarAction extends Action {
     cssClass = 'repiar-action';
 }
 
+const search = (e, uniqueUsers) => {
 
-fetch("https://arcane-sierra-77337.herokuapp.com/data")
-    .then((response) => response.json()).then(pius => {
-        console.log(pius);
-        pius.forEach(piu => {
-            feed.appendChild(new Piu(piu).element);
-        })
-        
-    })
+}

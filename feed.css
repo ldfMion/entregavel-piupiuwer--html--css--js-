@@ -5,6 +5,24 @@
     width: 100%;
 }
 
+.search-area {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.search-results{
+    background: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-button-black);
+    padding: 8px;
+}
+
+.search-results-inactive{
+    padding: 0px;
+}
+
 .feed{
     display: flex;
     flex-direction: column;

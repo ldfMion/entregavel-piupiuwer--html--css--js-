@@ -34,12 +34,14 @@
         </nav>
     </aside>
     <section class="feed" id="feed">
-        <form class="search-field">
-            <input type="text" placeholder="Busca..." id="search-field-text">
-            <input type="submit" value="Procurar">
-        </form>
+        <div class="search-area" id="search-area">
+            <form class="search-field">
+                <input type="text" placeholder="Busca..." id="search-field-text">
+                <!--<input type="submit" value="Procurar">-->
+            </form>
+            <ul class="search-results search-results-inactive" id="search-results"></ul>
+        </div>
     </section>
     <script src="feed.js"></script>
-    <script src="search.js"></script>
 </body>
 </html>
