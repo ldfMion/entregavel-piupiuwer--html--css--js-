@@ -8,8 +8,16 @@ fetch("https://arcane-sierra-77337.herokuapp.com/data")
 
         //PEGAR OS PIUS
         console.log(pius);
-        pius.forEach(piu => {
+        pius.sort((prev, curr) => {
+            console.log('sort')
+            console.log(typeof prev.created_at, curr.created_at)
+            return new Date(prev.created_at) - new Date(curr.created_at)
+        }).forEach(piu => {
             feed.appendChild(new Piu(piu).element);
+        })
+
+        pius.forEach(piu => {
+            console.log(new Date(piu.created_at))
         })
         
         //FUNCTIONALIDADE SEARCH
