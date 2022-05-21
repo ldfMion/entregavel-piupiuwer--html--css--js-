@@ -15,10 +15,6 @@ fetch("https://arcane-sierra-77337.herokuapp.com/data")
         }).forEach(piu => {
             feed.appendChild(new Piu(piu).element);
         })
-
-        pius.forEach(piu => {
-            console.log(new Date(piu.created_at))
-        })
         
         //FUNCTIONALIDADE SEARCH
         const users = pius.map(piu => piu.user);
