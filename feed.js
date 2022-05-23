@@ -34,6 +34,45 @@ class UserContainer {
     }
 }
 
+class ErrorArea {
+    constructor(input, submit){
+        this.input = input;
+        this.submit = submit;
+    }
+    get element(){
+        const errorArea = document.createElement('div');
+        errorArea.classList.add('error-area');
+        const errorMessage = document.createElement('p');
+        errorMessage.classList.add('warning-text');
+        errorArea.appendChild(errorMessage);
+        const charCount = document.createElement('p');
+        charCount.innerText = '140'
+        charCount.classList.add('text-align-right');
+        errorArea.appendChild(charCount);
+
+        this.input.addEventListener('keyup', e => {
+            const remainingChars = 140 - e.target.value.length;
+            charCount.innerText = remainingChars;
+            if(remainingChars < 0){
+                this.submit.disabled = true;
+                charCount.classList.add('warning-text');
+                errorMessage.innerText = 'Escreva no máximo 140 caracteres';
+            } else if (remainingChars === 140){
+                this.submit.disabled = true;
+                charCount.classList.add('warning-text');
+                errorMessage.innerText = 'O piu não pode estar vazio';
+            } 
+            else {
+                this.submit.disabled = false;
+                charCount.classList.remove('warning-text');
+                errorMessage.innerText = '';
+            }
+        });
+
+        return errorArea;
+    }
+}
+
 class PiuOption {
     additionalClasses = '';
     piuOptionText;
@@ -259,16 +298,15 @@ class CriarPio {
         this.inputText = inputText;
         criarPio.appendChild(inputText);
 
-        const errorArea = document.createElement('div');
-        errorArea.classList.add('error-area');
-        const errorMessage = document.createElement('p');
-        errorMessage.classList.add('warning-text');
-        errorArea.appendChild(errorMessage);
-        const charCount = document.createElement('p');
-        charCount.innerText = '140'
-        charCount.classList.add('text-align-right');
-        errorArea.appendChild(charCount);
-        criarPio.appendChild(errorArea);
+        // const errorArea = document.createElement('div');
+        // errorArea.classList.add('error-area');
+        // const errorMessage = document.createElement('p');
+        // errorMessage.classList.add('warning-text');
+        // errorArea.appendChild(errorMessage);
+        // const charCount = document.createElement('p');
+        // charCount.innerText = '140'
+        // charCount.classList.add('text-align-right');
+        // errorArea.appendChild(charCount);        
 
 
         const buttons = document.createElement('div');
@@ -291,26 +329,30 @@ class CriarPio {
         submitPio.appendChild(submitPioText)
         buttons.appendChild(submitPio);
 
+        const errorArea = new ErrorArea(inputText, submitPio).element;
+
+
+        criarPio.appendChild(errorArea);
         criarPio.appendChild(buttons);
 
-        inputText.addEventListener('keyup', e => {
-            const remainingChars = 140 - e.target.value.length;
-            charCount.innerText = remainingChars;
-            if(remainingChars < 0){
-                submitPio.disabled = true;
-                charCount.classList.add('warning-text');
-                errorMessage.innerText = 'Escreva no máximo 140 caracteres';
-            } else if (remainingChars === 140){
-                submitPio.disabled = true;
-                charCount.classList.add('warning-text');
-                errorMessage.innerText = 'O piu não pode estar vazio';
-            } 
-            else {
-                submitPio.disabled = false;
-                charCount.classList.remove('warning-text');
-                errorMessage.innerText = '';
-            }
-        });
+        // inputText.addEventListener('keyup', e => {
+        //     const remainingChars = 140 - e.target.value.length;
+        //     charCount.innerText = remainingChars;
+        //     if(remainingChars < 0){
+        //         submitPio.disabled = true;
+        //         charCount.classList.add('warning-text');
+        //         errorMessage.innerText = 'Escreva no máximo 140 caracteres';
+        //     } else if (remainingChars === 140){
+        //         submitPio.disabled = true;
+        //         charCount.classList.add('warning-text');
+        //         errorMessage.innerText = 'O piu não pode estar vazio';
+        //     } 
+        //     else {
+        //         submitPio.disabled = false;
+        //         charCount.classList.remove('warning-text');
+        //         errorMessage.innerText = '';
+        //     }
+        // });
 
         cancelButton.addEventListener('click', e => {
             criarPio.remove();
