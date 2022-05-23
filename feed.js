@@ -88,13 +88,17 @@ class PiuOption {
         piuOption.classList.add('btn-terciary' + this.additionalClasses);
 
         const piuOptionIcon = document.createElement('img');
-        piuOptionIcon.classList.add('piu-option-icon')
-        piuOptionIcon.src = this.piuOptionIconSrc;
 
         const piuOptionText = document.createElement('p');
         piuOptionText.innerText = this.piuOptionText;
 
-        piuOption.appendChild(piuOptionIcon);
+        if(this.piuOptionIconSrc !== undefined){
+            piuOptionIcon.classList.add('piu-option-icon')
+            piuOptionIcon.src = this.piuOptionIconSrc;
+
+            piuOption.appendChild(piuOptionIcon);
+        }
+
         piuOption.appendChild(piuOptionText);
         piuOption.addEventListener('click', this.specificActions);
 
@@ -170,6 +174,16 @@ class PiuOptionDelete extends PiuOption {
     }
 }
 
+class PiuOptionCancel extends PiuOption {
+    piuOptionText = 'Cancel';
+    constructor(...args){
+        super(...args);
+    }
+    specificActions = () => {
+        this.hidePiuOptions();
+    }
+}
+
 class Piu {
 	constructor({ 
         text, 
@@ -230,6 +244,7 @@ class Piu {
         piuOptions.appendChild(new PiuOptionEdit(textParagraph, userAndText, piuOptions).element);
         piuOptions.appendChild(new PiuOptionDelete(piu, piuOptions).element);
         piuOptions.appendChild(new PiuOptionPin(piu, piuOptions).element);
+        piuOptions.appendChild(new PiuOptionCancel(piuOptions).element);
         piuOptions.classList.add('piu-options-hidden');
         optionsIcon.addEventListener('click', () => {
             piuOptions.classList.remove('piu-options-hidden');
