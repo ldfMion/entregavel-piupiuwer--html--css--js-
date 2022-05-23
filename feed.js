@@ -105,26 +105,38 @@ class PiuOption {
 class PiuOptionEdit extends PiuOption {
     piuOptionText = 'Edit';
     piuOptionIconSrc = 'icons/edit.svg';
-    constructor(textParagraph, ...args){
+    constructor(textParagraph, piuUserAndText, ...args){
         super(...args);
         this.textParagraph = textParagraph;
+        this.piuUserAndText = piuUserAndText;
     }
     specificActions = () => {
-        console.log(this.textParagraph)
-        this.textParagraph.contentEditable = true;
         this.hidePiuOptions();
+        const editArea = document.createElement('form');
+        editArea.classList.add('edit-area');
+        const inputText = document.createElement('textarea');
+        inputText.value = this.textParagraph.innerText;
+        this.textParagraph.remove();
+
         const finishEditingButton = document.createElement('button');
-        finishEditingButton.contentEditable = false;
         finishEditingButton.classList.add('btn-primary')
         const finishEditingButtonText = document.createElement('p');
         finishEditingButtonText.classList.add('text-align-center')
         finishEditingButtonText.innerText = 'Done';
         finishEditingButton.appendChild(finishEditingButtonText);
+        editArea.appendChild(inputText)
+        editArea.appendChild(new ErrorArea(inputText, finishEditingButton).element)
+        editArea.appendChild(finishEditingButton);
+
+        this.piuUserAndText.appendChild(editArea);
+
         finishEditingButton.addEventListener('click', () => {
-            this.textParagraph.contentEditable = false;
-            finishEditingButton.remove();
+            const newTextParagraph = document.createElement('p');
+            newTextParagraph.innerText = inputText.value;
+            editArea.remove();
+            this.piuUserAndText.appendChild(newTextParagraph)
         })
-        this.textParagraph.appendChild(finishEditingButton)
+
     }
 }
 
@@ -199,7 +211,7 @@ class Piu {
 
         const piuOptions = document.createElement('menu');
         piuOptions.classList.add('piu-options');
-        piuOptions.appendChild(new PiuOptionEdit(textParagraph, piuOptions).element);
+        piuOptions.appendChild(new PiuOptionEdit(textParagraph, userAndText, piuOptions).element);
         piuOptions.appendChild(new PiuOptionDelete(piu, piuOptions).element);
         piuOptions.classList.add('piu-options-hidden');
         optionsIcon.addEventListener('click', () => {
