@@ -1,5 +1,8 @@
 //eu ia fazer um arquivo para cada componente, mas nesse jeito de renderizar o site pelo arquivo html os modulos não funcionam
 
+const feed = document.getElementById('feed');
+const searchFieldTextInput = document.getElementById("search-field-text");
+const searchArea = document.getElementById('search-area');
 
 class UsernameButton {
     constructor(username){
@@ -140,6 +143,20 @@ class PiuOptionEdit extends PiuOption {
     }
 }
 
+class PiuOptionPin extends PiuOption {
+    piuOptionText = 'Pin';
+    piuOptionIconSrc = 'icons/pin.svg';
+    constructor(piu, ...args){
+        super(...args);
+        this.piu = piu;
+    }
+    specificActions = () => {
+        console.log(searchArea.nextElementSibling)
+        feed.insertBefore(this.piu, searchArea.nextElementSibling)
+        this.hidePiuOptions();
+    }
+}
+
 class PiuOptionDelete extends PiuOption {
     piuOptionText = 'Delete';
     piuOptionIconSrc = 'icons/delete.svg';
@@ -149,7 +166,6 @@ class PiuOptionDelete extends PiuOption {
         this.piu = piu;
     }
     specificActions = () => {
-        console.log(this.piu)
         this.piu.remove();
     }
 }
@@ -213,6 +229,7 @@ class Piu {
         piuOptions.classList.add('piu-options');
         piuOptions.appendChild(new PiuOptionEdit(textParagraph, userAndText, piuOptions).element);
         piuOptions.appendChild(new PiuOptionDelete(piu, piuOptions).element);
+        piuOptions.appendChild(new PiuOptionPin(piu, piuOptions).element);
         piuOptions.classList.add('piu-options-hidden');
         optionsIcon.addEventListener('click', () => {
             piuOptions.classList.remove('piu-options-hidden');
@@ -412,11 +429,6 @@ const search = (e, uniqueUsers) => {
         })
     }
 }
-
-const feed = document.getElementById('feed');
-const searchFieldTextInput = document.getElementById("search-field-text");
-const searchArea = document.getElementById('search-area');
-
 
 fetch("https://arcane-sierra-77337.herokuapp.com/data")
     .then((response) => response.json()).then(pius => {
