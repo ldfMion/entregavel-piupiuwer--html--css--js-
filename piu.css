@@ -30,6 +30,7 @@
     max-width: 36rem;
     width: 100%;
     overflow: clip;
+    position: relative;
 }
 
 .text-paragraph {
@@ -94,4 +95,33 @@
 .repiar-action:hover{
     background: var(--yellow-light);
     box-shadow: var(--shadow-action-yellow);
+}
+
+.piu-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.options-icon {
+    height: 1.5rem;
+}
+
+.piu-options {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: white;
+    box-shadow: var(--shadow-card-piu);
+    border-radius: var(--border-radius);
+}
+
+.piu-options-hidden {
+    display: none;
+}
+
+.piu-option-icon {
+    height: 1.5rem;
 }

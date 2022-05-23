@@ -27,10 +27,11 @@
     width: 100%;
 }
 
+/*
 .criar-pio-buttons > * > * {
     text-align: center;
     width: 100%;
-}
+}*/
 
 .error-area {
     display: flex;

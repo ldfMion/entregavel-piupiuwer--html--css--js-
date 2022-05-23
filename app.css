@@ -40,6 +40,11 @@ p {
     text-align: end;
 }
 
+.text-align-center{
+    text-align: center;
+    width: 100%;
+}
+
 button {
     display: flex;
     flex-direction: row;
@@ -128,6 +133,29 @@ textarea{
 }
 
 textarea:focus{
+    box-shadow: var(--shadow-button-black);
+    outline: none;
+}
+
+*[contenteditable="true"] {
+    font-family: var(--font-main);
+    font-size: 1rem;
+    word-break: break-all;
+    white-space: normal;
+    padding: 1rem;
+    background: rgba(133, 199, 242, 0.5);
+    border-radius: var(--border-radius);
+    border: none;
+    width: 100%;
+    height: 100%;
+    resize: none;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+}
+
+*[contenteditable="true"]:focus{
     box-shadow: var(--shadow-button-black);
     outline: none;
 }

@@ -1,48 +1,11 @@
-console.log('teste');
-const feed = document.getElementById('feed');
-const searchFieldTextInput = document.getElementById("search-field-text");
-const searchArea = document.getElementById('search-area');
-
-
-fetch("https://arcane-sierra-77337.herokuapp.com/data")
-    .then((response) => response.json()).then(pius => {
-
-        //PEGAR OS PIUS
-        console.log(pius);
-        pius.sort((prev, curr) => {
-            console.log('sort')
-            console.log(typeof prev.created_at, curr.created_at)
-            return new Date(prev.created_at) - new Date(curr.created_at)
-        }).forEach(piu => {
-            feed.appendChild(new Piu(piu).element);
-        })
-        
-        //FUNCTIONALIDADE SEARCH
-        const users = pius.map(piu => piu.user);
-		const uniqueUsers = Array.from(new Set(users.map(user => user.id))).map(
-			id => {
-				return users.find(user => user.id === id);
-			}
-		);
-		console.log(uniqueUsers);
-		searchFieldTextInput.addEventListener("input", e => search(e, uniqueUsers));
-    })
-
-const piarButton = document.getElementById('piar-button');
-
-piarButton.addEventListener('click', () => {
-    piarButton.classList.add('piar-button-hidden');
-    document.querySelector('body').appendChild(new CriarPio().element);
-})
+//eu ia fazer um arquivo para cada componente, mas nesse jeito de renderizar o site pelo arquivo html os modulos não funcionam
 
 
 class UsernameButton {
     constructor(username){
         this.username = username;
-        console.log('is on username button constructor')
     }
     get element(){
-        console.log('is on get elemetn on username button')
         const usernameParagraph = document.createElement("p");
         usernameParagraph.appendChild(document.createTextNode("@" + this.username))
         const usernameButton = document.createElement("button");
@@ -71,28 +34,104 @@ class UserContainer {
     }
 }
 
+class PiuOption {
+    additionalClasses = '';
+    piuOptionText;
+    piuOptionIconSrc;
+    constructor(piuOptions){
+        this.piuOptions = piuOptions;
+    }
+    get element(){
+        const piuOption = document.createElement('button');
+        piuOption.classList.add('btn-terciary' + this.additionalClasses);
+
+        const piuOptionIcon = document.createElement('img');
+        piuOptionIcon.classList.add('piu-option-icon')
+        piuOptionIcon.src = this.piuOptionIconSrc;
+
+        const piuOptionText = document.createElement('p');
+        piuOptionText.innerText = this.piuOptionText;
+
+        piuOption.appendChild(piuOptionIcon);
+        piuOption.appendChild(piuOptionText);
+        piuOption.addEventListener('click', this.specificActions);
+
+        return piuOption;
+    }
+    hidePiuOptions(){
+        this.piuOptions.classList.add('piu-options-hidden');
+    }
+}
+
+class PiuOptionEdit extends PiuOption {
+    piuOptionText = 'Edit';
+    piuOptionIconSrc = 'icons/edit.svg';
+    constructor(textParagraph, ...args){
+        super(...args);
+        this.textParagraph = textParagraph;
+    }
+    specificActions = () => {
+        console.log(this.textParagraph)
+        this.textParagraph.contentEditable = true;
+        this.hidePiuOptions();
+        const finishEditingButton = document.createElement('button');
+        finishEditingButton.contentEditable = false;
+        finishEditingButton.classList.add('btn-primary')
+        const finishEditingButtonText = document.createElement('p');
+        finishEditingButtonText.classList.add('text-align-center')
+        finishEditingButtonText.innerText = 'Done';
+        finishEditingButton.appendChild(finishEditingButtonText);
+        finishEditingButton.addEventListener('click', () => {
+            this.textParagraph.contentEditable = false;
+            finishEditingButton.remove();
+        })
+        this.textParagraph.appendChild(finishEditingButton)
+    }
+}
+
+class PiuOptionDelete extends PiuOption {
+    piuOptionText = 'Delete';
+    piuOptionIconSrc = 'icons/delete.svg';
+    constructor(piu, ...args){
+        super(...args);
+        console.log(piu)
+        this.piu = piu;
+    }
+    specificActions = () => {
+        console.log(this.piu)
+        this.piu.remove();
+    }
+}
+
 class Piu {
 	constructor({ 
         text, 
         user,
-    }) {
+    }, likeCount) {
+        console.log(user)
 		this.text = text;
 		this.username = user.username;
-        this.photo = user.photo;
+        this.photo = ((user.photo === 'aleatorio' || user.photo === '') ? `https://avatars.dicebear.com/api/initials/${user.first_name[0] + user.last_name[0]}.svg` : user.photo);
+        this.likeCount = likeCount;
 	}
 	get element() {
 		const piu = document.createElement("article");
         piu.classList.add('piu');
 
         //USER AND TEXT
-
+        
         const usernameButton = new UsernameButton(this.username).element;
-
+        
         const userContainer = new UserContainer(this.photo, usernameButton).element;
-
+        
+        const optionsIcon = document.createElement('img');
+        optionsIcon.src = 'icons/options.svg';
+        optionsIcon.classList.add('options-icon');
+        
         const piuHeader = document.createElement('header');
         piuHeader.classList.add('piu-header');
         piuHeader.appendChild(userContainer);
+        piuHeader.appendChild(optionsIcon)
     
 		const textParagraph = document.createElement("p");
         textParagraph.classList.add('text-paragraph')
@@ -113,9 +152,23 @@ class Piu {
 
         actions.appendChild(new RepiarAction(Math.floor(Math.random() * 100)).createElement);
         actions.appendChild(new CommentAction(Math.floor(Math.random() * 100)).createElement);
-        actions.appendChild(new LikeAction(Math.floor(Math.random() * 100)).createElement);
+        actions.appendChild(new LikeAction(this.likeCount===undefined ? Math.floor(Math.random() * 100) : this.likeCount).createElement);
 
         piu.appendChild(actions)
+
+        //OPTIONS
+
+        const piuOptions = document.createElement('menu');
+        piuOptions.classList.add('piu-options');
+        piuOptions.appendChild(new PiuOptionEdit(textParagraph, piuOptions).element);
+        piuOptions.appendChild(new PiuOptionDelete(piu, piuOptions).element);
+        piuOptions.classList.add('piu-options-hidden');
+        optionsIcon.addEventListener('click', () => {
+            piuOptions.classList.remove('piu-options-hidden');
+        })
+
+
+        piuHeader.appendChild(piuOptions);
 
 		return piu;
 	}
@@ -142,7 +195,6 @@ class Action {
         this.countElement = count;
         return action;
     }
-    //specificActions;
 }
 
 class LikeAction extends Action {
@@ -152,7 +204,6 @@ class LikeAction extends Action {
     icon = "❤️";
     cssClass = 'like-action';
     specificActions = () => {
-        console.log(this)
         if(!this.liked){
             this.liked = true;
             this.count++;
@@ -183,6 +234,10 @@ class RepiarAction extends Action {
     cssClass = 'repiar-action';
 }
 
+
+
+
+
 const currentUser = {
     username: 'lorenzodfmion',
     first_name: 'Lorenzo',
@@ -201,6 +256,7 @@ class CriarPio {
         criarPio.appendChild(new UserContainer(currentUser.photo, new UsernameButton(currentUser.username).element).element);
 
         const inputText = document.createElement('textarea');
+        this.inputText = inputText;
         criarPio.appendChild(inputText);
 
         const errorArea = document.createElement('div');
@@ -221,6 +277,7 @@ class CriarPio {
         const cancelButton = document.createElement('button');
         cancelButton.classList.add('btn-terciary');
         const cancelButtonText = document.createElement('p');
+        cancelButtonText.classList.add('text-align-center');
         cancelButtonText.innerText = 'cancel';
         cancelButton.appendChild(cancelButtonText)
         buttons.appendChild(cancelButton);
@@ -229,6 +286,7 @@ class CriarPio {
         submitPio.disabled = true;
         submitPio.classList.add('btn-primary');
         const submitPioText = document.createElement('p');
+        submitPioText.classList.add('text-align-center');
         submitPioText.innerText = 'piar';
         submitPio.appendChild(submitPioText)
         buttons.appendChild(submitPio);
@@ -256,14 +314,15 @@ class CriarPio {
 
         cancelButton.addEventListener('click', e => {
             criarPio.remove();
-            console.log('os going to remove this class');
             piarButton.classList.remove('piar-button-hidden');
         })
 
         submitPio.addEventListener('click', e => {
             const piuText = inputText.value;
             e.preventDefault();
-            searchArea.after(new Piu({text: piuText, user: currentUser}).element);
+            searchArea.after(new Piu({text: piuText, user: currentUser}, 0).element);
+            criarPio.remove();
+            piarButton.classList.remove('piar-button-hidden');
         })
 
         return criarPio;
@@ -275,7 +334,6 @@ const search = (e, uniqueUsers) => {
     const searchResults = document.getElementById('search-results');
     const searchResultsChildren = Array.from(searchResults.children);
     if(searchResultsChildren.length){
-        console.log(searchResultsChildren);
         searchResultsChildren.forEach(result => result.remove());
     }
     if(searchedText.length === 0){
@@ -283,7 +341,6 @@ const search = (e, uniqueUsers) => {
         return
     }
     searchResults.classList.remove('search-results-inactive');
-    console.log(searchedText);
     const filteredUsers = uniqueUsers.filter(
         user =>
             user.username.toLowerCase().includes(searchedText) ||
@@ -296,9 +353,40 @@ const search = (e, uniqueUsers) => {
     if(filteredUsers.length === 0){
         searchResults.classList.add('search-results-inactive');
     } else {0
-        console.log(filteredUsers);
         filteredUsers.forEach(user => {
             searchResults.appendChild(new UsernameButton(user.username).element)
         })
     }
 }
+
+const feed = document.getElementById('feed');
+const searchFieldTextInput = document.getElementById("search-field-text");
+const searchArea = document.getElementById('search-area');
+
+
+fetch("https://arcane-sierra-77337.herokuapp.com/data")
+    .then((response) => response.json()).then(pius => {
+
+        //PEGAR OS PIUS
+        pius.sort((prev, curr) => {
+            return new Date(prev.created_at) - new Date(curr.created_at)
+        }).forEach(piu => {
+            feed.appendChild(new Piu(piu).element);
+        })
+        
+        //FUNCTIONALIDADE SEARCH
+        const users = pius.map(piu => piu.user);
+		const uniqueUsers = Array.from(new Set(users.map(user => user.id))).map(
+			id => {
+				return users.find(user => user.id === id);
+			}
+		);
+		searchFieldTextInput.addEventListener("input", e => search(e, uniqueUsers));
+    })
+
+const piarButton = document.getElementById('piar-button');
+
+piarButton.addEventListener('click', () => {
+    piarButton.classList.add('piar-button-hidden');
+    document.querySelector('body').appendChild(new CriarPio().element);
+})
