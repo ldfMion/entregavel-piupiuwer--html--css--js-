@@ -241,10 +241,15 @@ class Piu {
 
         const piuOptions = document.createElement('menu');
         piuOptions.classList.add('piu-options');
-        piuOptions.appendChild(new PiuOptionEdit(textParagraph, userAndText, piuOptions).element);
-        piuOptions.appendChild(new PiuOptionDelete(piu, piuOptions).element);
+
         piuOptions.appendChild(new PiuOptionPin(piu, piuOptions).element);
+        if(this.username === currentUser.username){
+            
+            piuOptions.appendChild(new PiuOptionEdit(textParagraph, userAndText, piuOptions).element);
+            piuOptions.appendChild(new PiuOptionDelete(piu, piuOptions).element);
+        }
         piuOptions.appendChild(new PiuOptionCancel(piuOptions).element);
+
         piuOptions.classList.add('piu-options-hidden');
         optionsIcon.addEventListener('click', () => {
             piuOptions.classList.remove('piu-options-hidden');
